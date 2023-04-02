@@ -33,12 +33,15 @@ class ActivityController extends Controller
         $total_score = $last7days_activities->sum('score');
         $total_time = $last7days_activities->sum('time');
 
+        $daily_activity = $last7days_activities->select(DB::raw('DATE(created_at) as date'),  DB::raw('sum(burned_cal) as burned_cal'), DB::raw('sum(time) as time'))
+            ->groupBy('date')
+            ->orderBy('date', 'desc');
+
         return response()->json([
-            'message' => 'User successfully registered.',
             'score' => $total_score,
             'burned_cal' => $total_burned_cal,
             'time' => $total_time,
-            'activity' => $last7days_activities->get(),
+            'activity' => $daily_activity->get(),
         ], 201);
     }
 

@@ -64,8 +64,8 @@ class AuthController extends Controller
 
     public function me()
     {
-        $user = JWTAuth::user();
-        return response()->json($user);
+        $token = request()->bearerToken();
+        return $this->respondWithToken($token);
     }
 
     public function logout()
